@@ -1,31 +1,23 @@
-import sys
-import re
-from collections import defaultdict
+from common import read_data, process, parse_line
 
-squares = defaultdict(int)
-conflicts = 0
-pattern = re.compile(r"^#([0-9]+) @ ([0-9]+),([0-9]+): ([0-9]+)x([0-9]+)$")
-lines = sys.stdin.readlines()
-for line in lines:
-    num, xcoord, ycoord, width, height = [
-        int(x) for x in pattern.match(line).groups()]
-    for i in range(xcoord, xcoord + width):
-        for j in range(ycoord, ycoord + height):
-            squares[(i, j)] += 1
-            if squares[(i, j)] == 2:
-                conflicts += 1
+lines = read_data()
+_, squares = process(lines)
 
-for line in lines:
-    num, xcoord, ycoord, width, height = [
-        int(x) for x in pattern.match(line).groups()]
-    overlap = False
-    for i in range(xcoord, xcoord + width):
-        for j in range(ycoord, ycoord + height):
-            if squares[(i, j)] != 1:
-                overlap = True
-                break
-        if overlap:
-            break
-    if not overlap:
-        print(num)
-        break
+
+def find_fabric(lines, squares):
+    for line in lines:
+        num, xcoord, ycoord, width, height = parse_line(line)
+        overlap = False
+
+        def overlap():
+            for i in range(xcoord, xcoord + width):
+                for j in range(ycoord, ycoord + height):
+                    if squares[(i, j)] != 1:
+                        return True
+            return False
+
+        if not overlap():
+            return num
+
+
+print(find_fabric(lines, squares))
