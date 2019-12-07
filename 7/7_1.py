@@ -1,32 +1,7 @@
-import sys
-import re
-from collections import defaultdict
+from common import read_data, run
 
-pat = re.compile(r"^Step ([A-Z]) must be finished before step ([A-Z]) can begin.$")
-rules = defaultdict(list)
-steps = set()
-
-for line in sys.stdin.readlines():
-    a, b = pat.match(line).groups()
-    steps.add(a)
-    steps.add(b)
-    rules[b] += a
+rules, steps = read_data()
 
 completed = []
-
-while len(completed) < len(steps):
-    for c in sorted(steps):
-        found = False
-        if c not in completed:
-            valid = True
-            for r in rules[c]:
-                if r not in completed:
-                    valid = False
-                    break
-            if valid:
-                completed.append(c)
-                found = True
-        if found:
-            break
-
+run(steps, rules, completed=completed, n_workers=1)
 print("".join(completed))
