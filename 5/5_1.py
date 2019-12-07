@@ -1,8 +1,5 @@
-import sys
+from common import react
 from functools import reduce
 
-def react(a, b):
-    lhs, ret = (a[-1], a[:-1]) if len(a) > 1 else (a, "")
-    return ret if lhs != b and lhs.lower() == b.lower() else a + b    
-
-print(len(reduce(react, sys.stdin.read().strip())))
+with open('input.txt') as data:
+    print(len(reduce(react, data.read().strip())))
