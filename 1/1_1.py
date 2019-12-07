@@ -1,7 +1,5 @@
-import sys
-
 frequency = 0
-lines = sys.stdin.readlines()
-for line in lines:
-    frequency += int(line)
+with open('input.txt') as data:
+    for line in data:
+        frequency += int(line)
 print(frequency)
